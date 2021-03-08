@@ -10,18 +10,18 @@ import android.graphics.Paint;
 import android.graphics.Shader;
 import android.util.Log;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Tile;
-import com.google.android.gms.maps.model.TileOverlay;
-import com.google.android.gms.maps.model.TileOverlayOptions;
-import com.google.android.gms.maps.model.TileProvider;
-import com.google.maps.android.SphericalUtil;
-import com.google.maps.android.geometry.Point;
-import com.google.maps.android.projection.SphericalMercatorProjection;
-
+import com.huawei.hms.maps.HuaweiMap;
+import com.huawei.hms.maps.model.LatLng;
+import com.huawei.hms.maps.model.Tile;
+import com.huawei.hms.maps.model.TileOverlay;
+import com.huawei.hms.maps.model.TileOverlayOptions;
+import com.huawei.hms.maps.model.TileProvider;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
+
+import me.tatiyanupanwong.supasin.android.libraries.huawei.maps.utils.SphericalUtil;
+import me.tatiyanupanwong.supasin.android.libraries.huawei.maps.utils.geometry.Point;
+import me.tatiyanupanwong.supasin.android.libraries.huawei.maps.utils.projection.SphericalMercatorProjection;
 
 
 /**
@@ -36,7 +36,7 @@ public class AirMapGradientPolyline extends AirMapFeature {
   private float zIndex;
   private float width;
 
-  private GoogleMap map;
+  private HuaweiMap map;
 
   private TileOverlayOptions tileOverlayOptions;
   private TileOverlay tileOverlay;
@@ -323,14 +323,14 @@ public class AirMapGradientPolyline extends AirMapFeature {
   }
 
   @Override
-  public void addToMap(GoogleMap map) {
+  public void addToMap(HuaweiMap map) {
     Log.d("AirMapGradientPolyline", "ADDTOMAP");
     this.map = map;
     this.tileOverlay = map.addTileOverlay(createTileOverlayOptions());
   }
 
   @Override
-  public void removeFromMap(GoogleMap map) {
+  public void removeFromMap(HuaweiMap map) {
     tileOverlay.remove();
   }
 

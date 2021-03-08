@@ -358,11 +358,6 @@ const NSInteger AIRMapMaxZoomLevel = 20;
     }
 }
 
-- (void)setTintColor:(UIColor *)tintColor
-{
-    super.tintColor = tintColor;
-}
-
 - (void)setFollowsUserLocation:(BOOL)followsUserLocation
 {
     _followUserLocation = followsUserLocation;
@@ -531,7 +526,7 @@ const NSInteger AIRMapMaxZoomLevel = 20;
 }
 
 - (void)cacheViewIfNeeded {
-    // https://github.com/react-native-maps/react-native-maps/issues/3100
+    // https://github.com/react-native-community/react-native-maps/issues/3100
     // Do nothing if app is not active
     if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive) {
         return;

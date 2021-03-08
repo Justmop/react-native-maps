@@ -23,8 +23,8 @@ import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.huawei.hms.maps.model.BitmapDescriptor;
+import com.huawei.hms.maps.model.BitmapDescriptorFactory;
 
 import javax.annotation.Nullable;
 
@@ -89,7 +89,7 @@ public class ImageReader {
       imp.setIconBitmapDescriptor(null);
       imp.update();
     } else if (uri.startsWith("http://") || uri.startsWith("https://") ||
-        uri.startsWith("file://") || uri.startsWith("asset://") || uri.startsWith("data:")) {
+        uri.startsWith("file://") || uri.startsWith("asset://")) {
       ImageRequest imageRequest = ImageRequestBuilder
           .newBuilderWithSource(Uri.parse(uri))
           .build();

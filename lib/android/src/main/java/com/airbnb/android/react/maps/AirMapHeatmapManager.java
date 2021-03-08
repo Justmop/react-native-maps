@@ -6,9 +6,10 @@ import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.ViewGroupManager;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.heatmaps.WeightedLatLng;
-import com.google.maps.android.heatmaps.Gradient;
+import com.huawei.hms.maps.model.LatLng;
+
+import me.tatiyanupanwong.supasin.android.libraries.huawei.maps.utils.heatmaps.Gradient;
+import me.tatiyanupanwong.supasin.android.libraries.huawei.maps.utils.heatmaps.WeightedLatLng;
 
 
 public class AirMapHeatmapManager extends ViewGroupManager<AirMapHeatmap> {

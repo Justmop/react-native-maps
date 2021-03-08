@@ -3,15 +3,19 @@ package com.airbnb.android.react.maps;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.TileOverlay;
-import com.google.android.gms.maps.model.TileOverlayOptions;
-import com.google.maps.android.heatmaps.HeatmapTileProvider;
-import com.google.maps.android.heatmaps.WeightedLatLng;
-import com.google.maps.android.heatmaps.Gradient;
+import com.huawei.hms.maps.HuaweiMap;
+import com.huawei.hms.maps.model.TileOverlay;
+import com.huawei.hms.maps.model.TileOverlayOptions;
+//import com.google.maps.android.heatmaps.HeatmapTileProvider;
+//import com.google.maps.android.heatmaps.WeightedLatLng;
+//import com.google.maps.android.heatmaps.Gradient;
 
 import java.util.Arrays;
 import java.util.List;
+
+import me.tatiyanupanwong.supasin.android.libraries.huawei.maps.utils.heatmaps.Gradient;
+import me.tatiyanupanwong.supasin.android.libraries.huawei.maps.utils.heatmaps.HeatmapTileProvider;
+import me.tatiyanupanwong.supasin.android.libraries.huawei.maps.utils.heatmaps.WeightedLatLng;
 
 public class AirMapHeatmap extends AirMapFeature {
 
@@ -101,13 +105,13 @@ public class AirMapHeatmap extends AirMapFeature {
     }
 
     @Override
-    public void addToMap(GoogleMap map) {
+    public void addToMap(HuaweiMap map) {
         Log.d("AirMapHeatmap", "ADD TO MAP");
         heatmap = map.addTileOverlay(getHeatmapOptions());
     }
 
     @Override
-    public void removeFromMap(GoogleMap map) {
+    public void removeFromMap(HuaweiMap map) {
         heatmap.remove();
     }
 

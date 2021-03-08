@@ -1,6 +1,7 @@
 package com.airbnb.android.react.maps;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -8,8 +9,6 @@ import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.os.Build;
-
-import androidx.core.content.PermissionChecker;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.core.view.MotionEventCompat;
 import android.view.GestureDetector;
@@ -34,31 +33,31 @@ import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.UIManagerModule;
 import com.facebook.react.uimanager.ViewProps;
 import com.facebook.react.uimanager.events.EventDispatcher;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMapOptions;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.Projection;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.GroundOverlay;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PointOfInterest;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.TileOverlay;
-import com.google.android.gms.maps.model.VisibleRegion;
-import com.google.android.gms.maps.model.IndoorBuilding;
-import com.google.android.gms.maps.model.IndoorLevel;
-import com.google.maps.android.data.kml.KmlContainer;
-import com.google.maps.android.data.kml.KmlLayer;
-import com.google.maps.android.data.kml.KmlPlacemark;
-import com.google.maps.android.data.kml.KmlStyle;
+import com.huawei.hms.maps.CameraUpdate;
+import com.huawei.hms.maps.CameraUpdateFactory;
+import com.huawei.hms.maps.HuaweiMap;
+import com.huawei.hms.maps.HuaweiMapOptions;
+import com.huawei.hms.maps.MapView;
+import com.huawei.hms.maps.OnMapReadyCallback;
+import com.huawei.hms.maps.Projection;
+import com.huawei.hms.maps.model.BitmapDescriptorFactory;
+import com.huawei.hms.maps.model.CameraPosition;
+import com.huawei.hms.maps.model.GroundOverlay;
+import com.huawei.hms.maps.model.LatLng;
+import com.huawei.hms.maps.model.LatLngBounds;
+import com.huawei.hms.maps.model.Marker;
+import com.huawei.hms.maps.model.MarkerOptions;
+import com.huawei.hms.maps.model.PointOfInterest;
+import com.huawei.hms.maps.model.Polygon;
+import com.huawei.hms.maps.model.Polyline;
+import com.huawei.hms.maps.model.TileOverlay;
+import com.huawei.hms.maps.model.VisibleRegion;
+import com.huawei.hms.maps.model.IndoorBuilding;
+import com.huawei.hms.maps.model.IndoorLevel;
+//import com.google.maps.android.data.kml.KmlContainer;
+//import com.google.maps.android.data.kml.KmlLayer;
+//import com.google.maps.android.data.kml.KmlPlacemark;
+//import com.google.maps.android.data.kml.KmlStyle;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -71,11 +70,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import me.tatiyanupanwong.supasin.android.libraries.huawei.maps.utils.data.kml.KmlContainer;
+import me.tatiyanupanwong.supasin.android.libraries.huawei.maps.utils.data.kml.KmlLayer;
+import me.tatiyanupanwong.supasin.android.libraries.huawei.maps.utils.data.kml.KmlPlacemark;
+import me.tatiyanupanwong.supasin.android.libraries.huawei.maps.utils.data.kml.KmlStyle;
+
 import static androidx.core.content.PermissionChecker.checkSelfPermission;
 
-public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
-    GoogleMap.OnMarkerDragListener, OnMapReadyCallback, GoogleMap.OnPoiClickListener, GoogleMap.OnIndoorStateChangeListener {
-  public GoogleMap map;
+public class AirMapView extends MapView implements HuaweiMap.InfoWindowAdapter,
+    HuaweiMap.OnMarkerDragListener, OnMapReadyCallback, HuaweiMap.OnPoiClickListener, HuaweiMap.OnIndoorStateChangeListener {
+  public HuaweiMap map;
   private KmlLayer kmlLayer;
   private ProgressBar mapLoadingProgressBar;
   private RelativeLayout mapLoadingLayout;
@@ -124,10 +128,10 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
   }
 
   // We do this to fix this bug:
-  // https://github.com/react-native-maps/react-native-maps/issues/271
+  // https://github.com/react-native-community/react-native-maps/issues/271
   //
   // which conflicts with another bug regarding the passed in context:
-  // https://github.com/react-native-maps/react-native-maps/issues/1147
+  // https://github.com/react-native-community/react-native-maps/issues/1147
   //
   // Doing this allows us to avoid both bugs.
   private static Context getNonBuggyContext(ThemedReactContext reactContext,
@@ -150,7 +154,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
 
   public AirMapView(ThemedReactContext reactContext, ReactApplicationContext appContext,
       AirMapManager manager,
-      GoogleMapOptions googleMapOptions) {
+      HuaweiMapOptions googleMapOptions) {
     super(getNonBuggyContext(reactContext, appContext), googleMapOptions);
 
     this.manager = manager;
@@ -208,7 +212,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
   }
 
   @Override
-  public void onMapReady(final GoogleMap map) {
+  public void onMapReady(final HuaweiMap map) {
     if (destroyed) {
       return;
     }
@@ -222,30 +226,30 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
 
     final AirMapView view = this;
 
-    map.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-      @Override
-      public void onMyLocationChange(Location location){
-        WritableMap event = new WritableNativeMap();
+//   map.setOnMyLocationChangeListener(new HuaweiMap.OnMyLocationChangeListener() {
+//     @Override
+//     public void onMyLocationChange(Location location){
+//       WritableMap event = new WritableNativeMap();
+//
+//       WritableMap coordinate = new WritableNativeMap();
+//       coordinate.putDouble("latitude", location.getLatitude());
+//       coordinate.putDouble("longitude", location.getLongitude());
+//       coordinate.putDouble("altitude", location.getAltitude());
+//       coordinate.putDouble("timestamp", location.getTime());
+//       coordinate.putDouble("accuracy", location.getAccuracy());
+//       coordinate.putDouble("speed", location.getSpeed());
+//       coordinate.putDouble("heading", location.getBearing());
+//       if(android.os.Build.VERSION.SDK_INT >= 18){
+//       coordinate.putBoolean("isFromMockProvider", location.isFromMockProvider());
+//       }
+//
+//       event.putMap("coordinate", coordinate);
+//
+//       manager.pushEvent(context, view, "onUserLocationChange", event);
+//     }
+//   });
 
-        WritableMap coordinate = new WritableNativeMap();
-        coordinate.putDouble("latitude", location.getLatitude());
-        coordinate.putDouble("longitude", location.getLongitude());
-        coordinate.putDouble("altitude", location.getAltitude());
-        coordinate.putDouble("timestamp", location.getTime());
-        coordinate.putDouble("accuracy", location.getAccuracy());
-        coordinate.putDouble("speed", location.getSpeed());
-        coordinate.putDouble("heading", location.getBearing());
-        if(android.os.Build.VERSION.SDK_INT >= 18){
-        coordinate.putBoolean("isFromMockProvider", location.isFromMockProvider());
-        }
-
-        event.putMap("coordinate", coordinate);
-
-        manager.pushEvent(context, view, "onUserLocationChange", event);
-      }
-    });
-
-    map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+    map.setOnMarkerClickListener(new HuaweiMap.OnMarkerClickListener() {
       @Override
       public boolean onMarkerClick(Marker marker) {
         WritableMap event;
@@ -273,7 +277,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
       }
     });
 
-    map.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
+    map.setOnPolygonClickListener(new HuaweiMap.OnPolygonClickListener() {
       @Override
       public void onPolygonClick(Polygon polygon) {
         WritableMap event = makeClickEventData(polygon.getPoints().get(0));
@@ -282,7 +286,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
       }
     });
 
-    map.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
+    map.setOnPolylineClickListener(new HuaweiMap.OnPolylineClickListener() {
       @Override
       public void onPolylineClick(Polyline polyline) {
         WritableMap event = makeClickEventData(polyline.getPoints().get(0));
@@ -291,7 +295,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
       }
     });
 
-    map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+    map.setOnInfoWindowClickListener(new HuaweiMap.OnInfoWindowClickListener() {
       @Override
       public void onInfoWindowClick(Marker marker) {
         WritableMap event;
@@ -312,7 +316,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
       }
     });
 
-    map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+    map.setOnMapClickListener(new HuaweiMap.OnMapClickListener() {
       @Override
       public void onMapClick(LatLng point) {
         WritableMap event = makeClickEventData(point);
@@ -321,7 +325,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
       }
     });
 
-    map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+    map.setOnMapLongClickListener(new HuaweiMap.OnMapLongClickListener() {
       @Override
       public void onMapLongClick(LatLng point) {
         WritableMap event = makeClickEventData(point);
@@ -330,7 +334,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
       }
     });
 
-    map.setOnGroundOverlayClickListener(new GoogleMap.OnGroundOverlayClickListener() {
+    map.setOnGroundOverlayClickListener(new HuaweiMap.OnGroundOverlayClickListener() {
       @Override
       public void onGroundOverlayClick(GroundOverlay groundOverlay) {
         WritableMap event = makeClickEventData(groundOverlay.getPosition());
@@ -339,44 +343,36 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
       }
     });
 
-    map.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
+    map.setOnCameraMoveStartedListener(new HuaweiMap.OnCameraMoveStartedListener() {
       @Override
       public void onCameraMoveStarted(int reason) {
         cameraMoveReason = reason;
       }
     });
 
-    map.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+    map.setOnCameraMoveListener(new HuaweiMap.OnCameraMoveListener() {
       @Override
       public void onCameraMove() {
         LatLngBounds bounds = map.getProjection().getVisibleRegion().latLngBounds;
-
         cameraLastIdleBounds = null;
-        boolean isGesture = GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE == cameraMoveReason;
-
-        RegionChangeEvent event = new RegionChangeEvent(getId(), bounds, true, isGesture);
-        eventDispatcher.dispatchEvent(event);
+        eventDispatcher.dispatchEvent(new RegionChangeEvent(getId(), bounds, true));
       }
     });
 
-    map.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+    map.setOnCameraIdleListener(new HuaweiMap.OnCameraIdleListener() {
       @Override
       public void onCameraIdle() {
         LatLngBounds bounds = map.getProjection().getVisibleRegion().latLngBounds;
         if ((cameraMoveReason != 0) &&
           ((cameraLastIdleBounds == null) ||
             LatLngBoundsUtils.BoundsAreDifferent(bounds, cameraLastIdleBounds))) {
-
           cameraLastIdleBounds = bounds;
-          boolean isGesture = GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE == cameraMoveReason;
-
-          RegionChangeEvent event = new RegionChangeEvent(getId(), bounds, false, isGesture);
-          eventDispatcher.dispatchEvent(event);
+          eventDispatcher.dispatchEvent(new RegionChangeEvent(getId(), bounds, false));
         }
       }
     });
 
-    map.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+    map.setOnMapLoadedCallback(new HuaweiMap.OnMapLoadedCallback() {
       @Override public void onMapLoaded() {
         isMapLoaded = true;
         manager.pushEvent(context, view, "onMapLoaded", new WritableNativeMap());
@@ -431,8 +427,8 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
   }
 
   private boolean hasPermissions() {
-    return checkSelfPermission(getContext(), PERMISSIONS[0]) == PermissionChecker.PERMISSION_GRANTED ||
-        checkSelfPermission(getContext(), PERMISSIONS[1]) == PermissionChecker.PERMISSION_GRANTED;
+    return checkSelfPermission(getContext(), PERMISSIONS[0]) == PackageManager.PERMISSION_GRANTED ||
+        checkSelfPermission(getContext(), PERMISSIONS[1]) == PackageManager.PERMISSION_GRANTED;
   }
 
 
@@ -746,7 +742,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
       int width = data.get("width") == null ? 0 : data.get("width").intValue();
       int height = data.get("height") == null ? 0 : data.get("height").intValue();
 
-      //fix for https://github.com/react-native-maps/react-native-maps/issues/245,
+      //fix for https://github.com/react-native-community/react-native-maps/issues/245,
       //it's not guaranteed the passed-in height and width would be greater than 0.
       if (width <= 0 || height <= 0) {
         map.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsToMove, 0));
@@ -881,12 +877,12 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
     if (addedPosition) {
       LatLngBounds bounds = builder.build();
       CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, baseMapPadding);
-
+      
       if (edgePadding != null) {
         map.setPadding(edgePadding.getInt("left"), edgePadding.getInt("top"),
           edgePadding.getInt("right"), edgePadding.getInt("bottom"));
-      }
-
+      }   
+      
       if (animated) {
         map.animateCamera(cu);
       } else {
@@ -1098,7 +1094,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
       cacheImageView.setVisibility(View.INVISIBLE);
       mapLoadingLayout.setVisibility(View.VISIBLE);
       if (this.isMapLoaded) {
-        this.map.snapshot(new GoogleMap.SnapshotReadyCallback() {
+        this.map.snapshot(new HuaweiMap.SnapshotReadyCallback() {
           @Override public void onSnapshotReady(Bitmap bitmap) {
             cacheImageView.setImageBitmap(bitmap);
             cacheImageView.setVisibility(View.VISIBLE);
@@ -1122,7 +1118,6 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
   }
 
   public void onDoublePress(MotionEvent ev) {
-    if (this.map == null) return;
     Point point = new Point((int) ev.getX(), (int) ev.getY());
     LatLng coords = this.map.getProjection().fromScreenLocation(point);
     WritableMap event = makeClickEventData(coords);
@@ -1256,13 +1251,13 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
       indoorBuilding.putArray("levels", levelsArray);
       indoorBuilding.putInt("activeLevelIndex", 0);
       indoorBuilding.putBoolean("underground", false);
-
+      
       event.putMap("IndoorBuilding", indoorBuilding);
 
       manager.pushEvent(context, this, "onIndoorBuildingFocused", event);
     }
   }
-
+  
   @Override
   public void onIndoorLevelActivated(IndoorBuilding building) {
     if (building == null) {
@@ -1285,7 +1280,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
 
     manager.pushEvent(context, this, "onIndoorLevelActivated", event);
   }
-
+    
   public void setIndoorActiveLevelIndex(int activeLevelIndex) {
     IndoorBuilding building = this.map.getFocusedBuilding();
     if (building != null) {

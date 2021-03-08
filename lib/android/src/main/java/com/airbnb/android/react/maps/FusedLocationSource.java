@@ -4,15 +4,13 @@ import android.content.Context;
 import android.location.Location;
 import android.os.Looper;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.LocationSource;
-import com.google.android.gms.tasks.OnSuccessListener;
-
-import java.lang.SecurityException;
+import com.huawei.hms.location.FusedLocationProviderClient;
+import com.huawei.hms.location.LocationCallback;
+import com.huawei.hms.location.LocationRequest;
+import com.huawei.hms.location.LocationResult;
+import com.huawei.hms.location.LocationServices;
+import com.huawei.hms.maps.LocationSource;
+import com.huawei.hmf.tasks.OnSuccessListener;
 
 public class FusedLocationSource implements LocationSource {
 
@@ -42,27 +40,23 @@ public class FusedLocationSource implements LocationSource {
 
     @Override
     public void activate(final OnLocationChangedListener onLocationChangedListener) {
-        try {
-            fusedLocationClientProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    if (location != null) {
-                        onLocationChangedListener.onLocationChanged(location);
-                    }
+        fusedLocationClientProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    onLocationChangedListener.onLocationChanged(location);
                 }
-            });
-            locationCallback = new LocationCallback() {
-                @Override
-                public void onLocationResult(LocationResult locationResult) {
-                    for (Location location : locationResult.getLocations()) {
-                        onLocationChangedListener.onLocationChanged(location);
-                    }
+            }
+        });
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                for (Location location : locationResult.getLocations()) {
+                    onLocationChangedListener.onLocationChanged(location);
                 }
-            };
-            fusedLocationClientProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        }
+            }
+        };
+        fusedLocationClientProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
     }
 
     @Override
